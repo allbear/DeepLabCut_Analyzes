@@ -1,0 +1,5 @@
+/images/*
+/test/
+/__pycache__/
+/.vscode/
+/.idea/
