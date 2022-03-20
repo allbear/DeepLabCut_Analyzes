@@ -1,5 +1,4 @@
 import csv
-from http.client import ImproperConnectionState
 import json
 import os
 import math
@@ -17,9 +16,8 @@ from glahp import Graph
 class analyze(Graph):
    def __init__(self) -> None:
       super().__init__()
-      self.path = "dango24"
+      self.path = "haimen"
       self.file_name = f"csv/{self.path}.csv"
-      self.input_csv = None
 
    def csv_reader(self) -> list:
       with open(self.file_name)as f:
@@ -53,9 +51,12 @@ class analyze(Graph):
       with open("util.json", "w")as f:
          json.dump(dic, f, indent=3)
 
-   def pd_preprocessing(self):
-      self.input_csv = pd.read_csv(self.file_name)
-      df = self.input_csv.drop("bodyparts", axis=1)  # 余分なセルを削除
+   def pd_preprocessing(self, csv_file=None):
+      if csv_file is None:
+         input_csv = pd.read_csv(self.file_name)
+      else:
+         input_csv = pd.read_csv(csv_file)
+      df = input_csv.drop("bodyparts", axis=1)  # 余分なセルを削除
       columns = df.columns.values
       self.frames = [i for i in range(len(df))]
       for i, column in enumerate(columns):
@@ -118,8 +119,8 @@ class analyze(Graph):
          for (i, j) in zip(leg1x, leg1y):
             print(self.getRD(i, j))
 
-   def overlap(self):
-      im = Image.open(f"images/{self.path}/dango.jpg")
+   def overlap(self):  # 画像を重ねる
+      im = Image.open(f"images/{self.path}/haimen.jpg")
       fig = plt.figure()
       with open("util.json", "r")as f:
          util = json.load(f)
@@ -153,7 +154,7 @@ class analyze(Graph):
       else:
          print("既に加工されています")
       self.pd_preprocessing()
-      self.all_plot()
+      self.midi()
 
 
 if __name__ == "__main__":
