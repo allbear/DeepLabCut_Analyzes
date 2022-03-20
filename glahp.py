@@ -25,8 +25,8 @@ class Graph():
       self.animation_y = {}
       self.animation_frames = {}
       self.plots_data = []
-      self.width = 2560
-      self.height = 1440
+      self.width = 2160
+      self.height = 3840
 
    def plot(self):
       fig = plt.figure()
@@ -136,7 +136,6 @@ class Graph():
          util = json.load(f)
       colors = util["rolylegs_colors"]
       legs = util["14legs_dactylus"]
-      fig = plt.figure()
       ax = fig.add_subplot(1, 1, 1)
       ax.set_xlim(0, 10000)
       ax.set_ylim(0, 1280)
@@ -152,6 +151,33 @@ class Graph():
       except FileNotFoundError:
          os.mkdir(f"images/{self.path}")
          plt.savefig(f"images/{self.path}/{self.path}_frame{part}.png", dpi=500, bbox_inches='tight')
+
+   def midi(self):
+      im = Image.open(f"images/{self.path}/haimen.jpg")
+      fig = plt.figure()
+      with open("util.json", "r")as f:
+         dic = json.load(f)
+      haimen = dic["haimen_dango"]
+      colors = dic["rolylegs_colors"]
+      ax = fig.add_subplot(1, 1, 1)
+      ax.imshow(im, alpha=0.6)
+      ax.set_xlim(0, 2160)
+      ax.set_ylim(0, 3840)
+      cen_x = (self.x["tail"][0] + self.x["head"][0]) / 2
+      cen_y = (self.y["tail"][0] + self.y["head"][0]) / 2
+      ax.scatter(self.x["head"][0], self.y["head"][0], s=30, alpha=0.5, c="blue", label="head")
+      ax.scatter(self.x["tail"][0], self.y["tail"][0], s=30, alpha=0.5, c="blue", label="tail")
+      ax.scatter(cen_x, cen_y, s=30, alpha=0.5, c="blue", label="center")
+      plt.xlabel("Frame Index", size="large", color="green")
+      plt.ylabel("x(soild),y(dashed)[pixel]", size="large", color="blue")
+      plt.legend(loc='best',
+                 bbox_to_anchor=(1, 1),
+                 borderaxespad=0.,)
+      try:
+         plt.savefig(f"images/{self.path}/{self.path}_frame.png", dpi=500, bbox_inches='tight')
+      except FileNotFoundError:
+         os.mkdir(f"images/{self.path}")
+         plt.savefig(f"images/{self.path}/{self.path}_frame.png", dpi=500, bbox_inches='tight')
 
    def frame_plot2(self):
       fig = plt.figure()
