@@ -17,7 +17,7 @@ class Graph():
    def __init__(self) -> None:
       self.input_csv = None
       self.legends = []  # 凡例
-      self.frames = []
+      self.frames_num = []
       self.x = {}
       self.y = {}
       self.neighborhood = {}
@@ -96,18 +96,18 @@ class Graph():
    def frame_x_y(self, ax, colors, legs, part):
       if part == 1:
          for i, column in enumerate(legs[0:7]):
-            ax.plot(self.frames, self.x[column], linewidth=2, c=colors[i], label=column + "_x")
+            ax.plot(self.frames_num, self.x[column], linewidth=2, c=colors[i], label=column + "_x")
          for i, column in enumerate(legs[0:7]):
-            ax.plot(self.frames, self.y[column], linewidth=2, c=colors[i], linestyle="dashed", label=column + "_y")
+            ax.plot(self.frames_num, self.y[column], linewidth=2, c=colors[i], linestyle="dashed", label=column + "_y")
       else:
          for i, column in enumerate(legs[7:14]):
-            ax.plot(self.frames, self.x[column], linewidth=2, c=colors[i + 7], label=column + "_x")
+            ax.plot(self.frames_num, self.x[column], linewidth=2, c=colors[i + 7], label=column + "_x")
          for i, column in enumerate(legs[7:14]):
-            ax.plot(self.frames, self.y[column], linewidth=2, c=colors[i + 7], linestyle="dashed", label=column + "_y")
+            ax.plot(self.frames_num, self.y[column], linewidth=2, c=colors[i + 7], linestyle="dashed", label=column + "_y")
       return ax
 
    def frame_x_y2(self, ax, colors, legs, part, num):
-      self.plots_data.append(self.frames[num])
+      self.plots_data.append(self.frames_num[num])
       if part == 1:
          for i, column in enumerate(legs[0:7]):
             if column not in self.animation_x:
@@ -124,9 +124,9 @@ class Graph():
             ax.plot(self.plots_data, self.animation_y[column], linewidth=2, c=colors[i], label=column + "_x")
       else:
          for i, column in enumerate(legs[7:14]):
-            ax.plot([self.frames[num]], [self.x[column][num]], linewidth=2, c=colors[i + 7], label=column + "_x")
+            ax.plot([self.frames_num[num]], [self.x[column][num]], linewidth=2, c=colors[i + 7], label=column + "_x")
          for i, column in enumerate(legs[7:14]):
-            ax.plot([self.frames[num]], [self.y[column][num]], linewidth=2, c=colors[i + 7], linestyle="dashed", label=column + "_y")
+            ax.plot([self.frames_num[num]], [self.y[column][num]], linewidth=2, c=colors[i + 7], linestyle="dashed", label=column + "_y")
       return ax
 
    def frame_plot(self):
@@ -187,7 +187,7 @@ class Graph():
       colors = util["rolylegs_colors"]
       legs = util["14legs_dactylus"]
 
-      for i in range(len(self.frames)):
+      for i in range(len(self.frames_num)):
          fig = plt.figure()
          ax = fig.add_subplot(1, 1, 1)
          ax.set_xlim(0, 10000)
