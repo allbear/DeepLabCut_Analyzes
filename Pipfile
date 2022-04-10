@@ -11,6 +11,8 @@ scikit-learn = "*"
 matplotlib = "*"
 pyinstaller = "*"
 pysimplegui = "*"
+tqdm = "*"
+ffmpeg = "*"
 
 [dev-packages]
 flake8 = "*"
