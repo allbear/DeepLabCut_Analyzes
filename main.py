@@ -4,10 +4,14 @@ import os
 import math
 import statistics
 import time
+import random
+import copy
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import tqdm
+import cv2
 from PIL import Image
 
 from glahp import Graph
@@ -16,12 +20,12 @@ from glahp import Graph
 class analyze(Graph):
    def __init__(self) -> None:
       super().__init__()
-      self.path = "dango24_600000_filtered"
+      self.path = "dango24"
       self.file_name = f"csv/{self.path}.csv"
       self.frames = {}
 
-   def csv_reader(self) -> list:
-      with open(self.file_name)as f:
+   def csv_reader(self, csv_path) -> list:
+      with open(csv_path)as f:
          stream = csv.reader(f)
          data = []
          for i in stream:
@@ -73,7 +77,29 @@ class analyze(Graph):
       for i in self.frames_num:
          self.frames[str(i)] = {}
          for label in self.legends:
-            self.frames[str(i)] = {"X": self.x[label][i], "y": self.y[label][i], "neighborhood": self.neighborhood[label][i]}
+            self.frames[str(i)][label] = {"x": self.x[label][i], "y": self.y[label][i], "neighborhood": self.neighborhood[label][i]}
+
+   def preprocessing_frame2(self, select_legends):
+      for i in self.frames_num:
+         self.frames[str(i)] = {}
+         for label in select_legends:
+            self.frames[str(i)][label] = {"x": self.x[label][i], "y": self.y[label][i], "neighborhood": self.neighborhood[label][i]}
+
+   def labeling(self, labeling_legend, movie_path):
+      cm = plt.cm.get_cmap("hsv", 256)
+      cap = cv2.VideoCapture(movie_path)
+      frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+      fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+      video = cv2.VideoWriter('timelaps.mp4', fourcc, 30, (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))))
+      for i in tqdm.tqdm(range(frame_count)):
+         ret, frame = cap.read()
+         if ret:
+            for num, legend in enumerate(labeling_legend):
+               color = copy.copy(list(cm(num / len(labeling_legend), bytes=True)))
+               color.pop(3)
+               colors = (int(color[0]), int(color[1]), int(color[2]))
+               cv2.circle(frame, (int(self.frames[str(i)][legend]["x"]), int(self.frames[str(i)][legend]["y"])), 15, colors, thickness=-1)
+            video.write(frame)
 
    def speed(self):
       for s in self.legends:
@@ -154,7 +180,7 @@ class analyze(Graph):
          plt.savefig(f"images/{self.path}/{date}.png", dpi=500, bbox_inches='tight')
 
    def main(self):
-      data = self.csv_reader()
+      data = self.csv_reader(self.file_name)
       if data[0][0] == "scorer":
          print("加工します")
          self.preprocessing(data)
@@ -162,7 +188,7 @@ class analyze(Graph):
          print("既に加工されています")
       self.pd_preprocessing()
       self.preprocessing_frame()
-      print(self.frames)
+      self.labeling(self.legends, "movie/dango24.mp4")
 
 
 if __name__ == "__main__":
