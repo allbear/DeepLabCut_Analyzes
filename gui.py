@@ -16,6 +16,7 @@ legends = []
 layout2 = []
 sg.theme('BlueMono')
 
+
 frame1 = sg.Frame('', [[sg.Text('読み取るCSVを選択してください')]])
 
 

@@ -11,6 +11,8 @@ scikit-learn = "*"
 matplotlib = "*"
 pyinstaller = "*"
 pysimplegui = "*"
+h5py = "*"
+notebook = "*"
 
 [dev-packages]
 flake8 = "*"
