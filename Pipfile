@@ -11,8 +11,10 @@ scikit-learn = "*"
 matplotlib = "*"
 pyinstaller = "*"
 pysimplegui = "*"
-tqdm = "*"
+h5py = "*"
+notebook = "*"
 ffmpeg = "*"
+tqdm = "*"
 
 [dev-packages]
 flake8 = "*"
