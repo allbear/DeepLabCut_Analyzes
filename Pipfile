@@ -13,6 +13,8 @@ pyinstaller = "*"
 pysimplegui = "*"
 h5py = "*"
 notebook = "*"
+ffmpeg = "*"
+tqdm = "*"
 
 [dev-packages]
 flake8 = "*"

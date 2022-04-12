@@ -25,7 +25,7 @@ class Ui_Window(analyze):
       self.frame1 = sg.Frame('', [[sg.Text('読み取るCSVを選択してください')]])
       self.layout = [[sg.Text('読み取るCSVを選択してください')],
                      [sg.Text('CSVファイルを選択', size=(15, 1)), sg.Input(), sg.FileBrowse('ファイルを選択', key='inputFilePath'), sg.Button('ラベリング', key='labeling')],
-                     [sg.Text('分割したい動画ファイルを選択', size=(25, 1)), sg.Input(), sg.FileBrowse('ファイルを選択', key='input')],
+                     [sg.Text('動画ファイルを選択', size=(25, 1)), sg.Input(), sg.FileBrowse('ファイルを選択', key='input')],
                      [sg.Text('フレーム出力先', size=(15, 1)), sg.Input(), sg.FolderBrowse('保存フォルダを選択', key='output')],
                      [sg.Button('フレーム分割', key='cut'), sg.Checkbox("圧縮", key="compression_check", default=True), sg.Input('80', size=(3, 1), enable_events=True, key='compression')],
                      [sg.Text('', key="process")],
@@ -51,7 +51,7 @@ class Ui_Window(analyze):
          return None
       return cap
 
-   def video_trimming(input, output, start_x, start_y, w, h):
+   def video_trimming(self, input, start_x, start_y, w, h):
 
       stream = ffmpeg.input(input)
       stream = ffmpeg.crop(stream, start_x, start_y, w, h)
@@ -61,6 +61,7 @@ class Ui_Window(analyze):
       stream = ffmpeg.output(stream, output_file_name)
 
       ffmpeg.run(stream, overwrite_output=True)
+      print("トリム完了")
 
    def flame_save(self, input, output, compression_check, compression_parameter):
       cap = self.frame_extract(input)
@@ -122,6 +123,8 @@ class Ui_Window(analyze):
             self.pd_preprocessing(values['inputFilePath'])
          if event == "random":
             self.frame_extract(int(values['random_num']), values["random_input"])
+         if event == "crop":
+            self.video_trimming(values['input'], int(values['x']), int(values['y']), int(values['w']), int(values['h']))
          if event == "cut":
             self.flame_save(values['input'], values['output'], values["compression_check"], int(values["compression"]))
          if event == "labeling":
