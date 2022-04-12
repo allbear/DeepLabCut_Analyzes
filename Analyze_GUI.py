@@ -94,7 +94,7 @@ class Ui_Window(analyze):
                      [sg.Button('Exit')],
                      [sg.Column(check_box, scrollable=True)]]
       window = sg.Window("メイン画面", main_layout, size=(800, 800))
-      while True:  # Event Loop
+      while True:  # Event Loops
          event, values = window.read()
          if event in (sg.WIN_CLOSED, 'Exit'):
             return True
