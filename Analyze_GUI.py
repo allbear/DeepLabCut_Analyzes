@@ -61,7 +61,6 @@ class Ui_Window(analyze):
       stream = ffmpeg.output(stream, output_file_name)
 
       ffmpeg.run(stream, overwrite_output=True)
-      print("トリム完了")
 
    def flame_save(self, input, output, compression_check, compression_parameter):
       cap = self.frame_extract(input)
