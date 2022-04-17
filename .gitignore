@@ -8,3 +8,4 @@ movie
 dist
 build
 *.spec
+.mp4

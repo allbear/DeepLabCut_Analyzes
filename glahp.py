@@ -1,14 +1,8 @@
 import csv
 import json
-import math
 import os
-import statistics
-import time
-from turtle import color
 
 import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 from PIL import Image
 import matplotlib.animation as animation
 
