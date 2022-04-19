@@ -4,12 +4,10 @@ import os
 import math
 import statistics
 import time
-import random
 import copy
 
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
 import tqdm
 import cv2
 from PIL import Image

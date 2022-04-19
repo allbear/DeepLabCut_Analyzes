@@ -1,12 +1,9 @@
-import json
 import os
-import time
 import glob
 import shutil
 import random
 
 import cv2
-import pandas as pd
 import PySimpleGUI as sg
 import ffmpeg
 

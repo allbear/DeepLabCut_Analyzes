@@ -1,10 +1,10 @@
-/images/*
+static/images/*
 /test/
 /__pycache__/
 /.vscode/
 /.idea/
 .venv
-movie
+static/movie
 dist
 build
 *.spec
