@@ -1,16 +1,12 @@
-import os
-import glob
-import shutil
-import random
-
-import cv2
+from subprocess import SubprocessError
+from time import time
 import PySimpleGUI as sg
-import ffmpeg
 
 from main import analyze
+from frame_process import Frame_Process as frame
 
 
-class Ui_Window(analyze):
+class Ui_Window(analyze, frame):
    sg.theme('BlueMono')
 
    def setup(self):
@@ -34,53 +30,6 @@ class Ui_Window(analyze):
                      [sg.Button('Exit')]]
       self.window = sg.Window('解析ツール', self.layout, size=(800, 600), keep_on_top=True)
 
-   def frame_extract2(self, num, folder, ext="jpg"):
-      files = glob.glob(f"{folder}/*.{ext}")
-      files = random.sample(files, num)
-      for f in files:
-         if not os.path.exists(f"{folder}/random_images"):
-            os.mkdir()
-         shutil.copy2(f, f"{folder}/random_images")
-
-   def frame_extract(self, input):
-      cap = cv2.VideoCapture(input)
-      if not cap.isOpened():
-         return None
-      return cap
-
-   def video_trimming(self, input, start_x, start_y, w, h):
-
-      stream = ffmpeg.input(input)
-      stream = ffmpeg.crop(stream, start_x, start_y, w, h)
-
-      output_file_str = input.split(".")
-      output_file_name = output_file_str[0] + "_trimed." + output_file_str[1]
-      stream = ffmpeg.output(stream, output_file_name)
-
-      ffmpeg.run(stream, overwrite_output=True)
-
-   def flame_save(self, input, output, compression_check, compression_parameter):
-      cap = self.frame_extract(input)
-      if cap is None:
-         return
-      digit = len(str(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))))
-      n = 0
-      totalframes = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-      while True:
-         ret, frame = cap.read()
-         if ret:
-            if compression_check is True:
-               cv2.imwrite(f'{output}/{str(n).zfill(digit)}.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), compression_parameter])
-               print(f"{round(n/totalframes*100,1)}%完了")
-               n += 1
-            else:
-               cv2.imwrite(f'{output}/{str(n).zfill(digit)}.png', frame)
-               print(f'{output}/{str(n).zfill(digit)}.png')
-               n += 1
-         else:
-            self.window["process"].update("切り出しが完了しました")
-            return
-
    def display_main(self, csv_path):
       check_box = []
       for i in self.legends:
@@ -88,6 +37,7 @@ class Ui_Window(analyze):
       main_layout = [[sg.Text("任意の部位とラベリングを行う動画を選択してください")],
                      [sg.Button('解析', key='analyzes')],
                      [sg.Input(), sg.FileBrowse('動画を選択', key='movie')],
+                     [sg.Text("出力する動画のファイル名を指定"), sg.Input("labeling", key="file_name")],
                      [sg.Button('Exit')],
                      [sg.Column(check_box, scrollable=True)]]
       window = sg.Window("メイン画面", main_layout, size=(800, 800))
@@ -107,7 +57,7 @@ class Ui_Window(analyze):
             else:
                print("既に加工されています")
             self.preprocessing_frame2(parts)
-            self.labeling(parts, values["movie"])
+            self.labeling(parts, values["movie"], values["file_name"])
 
    def main(self):
       self.setup()
@@ -118,12 +68,16 @@ class Ui_Window(analyze):
          if event == "analyzes":
             self.pd_preprocessing(values['inputFilePath'])
          if event == "random":
-            self.frame_extract(int(values['random_num']), values["random_input"])
+            frame.frame_extract(int(values['random_num']), values["random_input"])
          if event == "crop":
-            self.video_trimming(values['input'], int(values['x']), int(values['y']), int(values['w']), int(values['h']))
+            frame.video_trimming(values['input'], int(values['x']), int(values['y']), int(values['w']), int(values['h']))
          if event == "cut":
-            self.flame_save(values['input'], values['output'], values["compression_check"], int(values["compression"]))
+            frame.flame_save(values['input'], values['output'], values["compression_check"], int(values["compression"]))
          if event == "labeling":
+            print(self.times)
+            data = self.csv_reader(values['inputFilePath'])
+            if data[0][0] == "scorer":
+               self.preprocessing(data, values['inputFilePath'])
             self.pd_preprocessing(values['inputFilePath'])
             self.window.close()
             dis = self.display_main(values['inputFilePath'])

@@ -19,7 +19,7 @@ class analyze(Graph):
    def __init__(self) -> None:
       super().__init__()
       self.path = "dango24"
-      self.file_name = f"csv/{self.path}.csv"
+      self.file_name = f"static/csv/{self.path}.csv"
       self.frames = {}
 
    def csv_reader(self, csv_path) -> list:
@@ -39,11 +39,10 @@ class analyze(Graph):
          else:
             datas[0][i] = data + "_neighborhood"
 
-   def preprocessing(self, datas):
+   def preprocessing(self, datas, csv_path):
       del datas[0]
       del datas[1]
-      # self.change_name(datas)
-      with open(self.file_name, 'w', newline="") as f:
+      with open(csv_path, 'w', newline="") as f:
          writer = csv.writer(f)
          writer.writerows(datas)
 
@@ -82,22 +81,6 @@ class analyze(Graph):
          self.frames[str(i)] = {}
          for label in select_legends:
             self.frames[str(i)][label] = {"x": self.x[label][i], "y": self.y[label][i], "neighborhood": self.neighborhood[label][i]}
-
-   def labeling(self, labeling_legend, movie_path):
-      cm = plt.cm.get_cmap("hsv", 256)
-      cap = cv2.VideoCapture(movie_path)
-      frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-      fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-      video = cv2.VideoWriter('timelaps.mp4', fourcc, 30, (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))))
-      for i in tqdm.tqdm(range(frame_count)):
-         ret, frame = cap.read()
-         if ret:
-            for num, legend in enumerate(labeling_legend):
-               color = copy.copy(list(cm(num / len(labeling_legend), bytes=True)))
-               color.pop(3)
-               colors = (int(color[0]), int(color[1]), int(color[2]))
-               cv2.circle(frame, (int(self.frames[str(i)][legend]["x"]), int(self.frames[str(i)][legend]["y"])), 15, colors, thickness=-1)
-            video.write(frame)
 
    def speed(self):
       for s in self.legends:
