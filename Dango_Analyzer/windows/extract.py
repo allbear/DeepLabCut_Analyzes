@@ -19,7 +19,7 @@ class Extract:
 
    def main(self):
       self.setup()
-      while True:  # Event Loops
+      while True:  # Event Loop
          event, values = self.window.read()
          if event == 'Exit':
             break
