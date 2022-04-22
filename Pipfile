@@ -15,6 +15,7 @@ h5py = "*"
 notebook = "*"
 ffmpeg = "*"
 tqdm = "*"
+ffmpeg-python = "*"
 
 [dev-packages]
 flake8 = "*"

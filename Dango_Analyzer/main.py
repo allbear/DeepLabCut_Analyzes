@@ -4,12 +4,9 @@ import os
 import math
 import statistics
 import time
-import copy
 
 import matplotlib.pyplot as plt
 import pandas as pd
-import tqdm
-import cv2
 from PIL import Image
 
 from glahp import Graph

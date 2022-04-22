@@ -59,7 +59,7 @@ class Frame_Process:
             self.window["process"].update("切り出しが完了しました")
             return
 
-   def labeling(self, labeling_legend, movie_path, output):
+   def labeling(self, all_legends, labeling_legend, movie_path, output):
       cm = plt.cm.get_cmap("hsv", 256)
       cap = cv2.VideoCapture(movie_path)
       frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))

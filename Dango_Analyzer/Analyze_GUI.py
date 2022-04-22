@@ -1,5 +1,3 @@
-from subprocess import SubprocessError
-from time import time
 import PySimpleGUI as sg
 
 from main import analyze
@@ -57,7 +55,7 @@ class Ui_Window(analyze, frame):
             else:
                print("既に加工されています")
             self.preprocessing_frame2(parts)
-            self.labeling(parts, values["movie"], values["file_name"])
+            self.labeling(parts, self.legends, values["movie"], values["file_name"])
 
    def main(self):
       self.setup()
@@ -74,7 +72,6 @@ class Ui_Window(analyze, frame):
          if event == "cut":
             frame.flame_save(values['input'], values['output'], values["compression_check"], int(values["compression"]))
          if event == "labeling":
-            print(self.times)
             data = self.csv_reader(values['inputFilePath'])
             if data[0][0] == "scorer":
                self.preprocessing(data, values['inputFilePath'])
