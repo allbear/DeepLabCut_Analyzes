@@ -4,6 +4,14 @@ import pandas as pd
 
 class Analyze:
 
+   def __init__(self) -> None:
+      self.frames_num = []
+      self.x = {}
+      self.y = {}
+      self.neighborhood = {}
+      self.frames = {}
+      self.legends = []
+
    def csv_reader(self, csv_path) -> list:
       with open(csv_path)as f:
          stream = csv.reader(f)
@@ -12,27 +20,43 @@ class Analyze:
             data.append(i)
       return data
 
-   def preprocessing(self, datas, csv_path):
-      del datas[0]
-      del datas[1]
-      return datas
-
-   def pd_preprocessing(self, datas):
-      df = pd.DataFrame(datas)
-      df = df.drop("bodyparts", axis=1)  # 余分なセルを削除
-      columns = df.columns.values
+   def pd_preprocessing(self, data):
+      del data[0]
+      del data[1]
+      columns = data.pop(0)
+      df = pd.DataFrame(data, columns=columns)
+      df = df.drop("bodyparts", axis=1)
+      col = df.columns.values
       self.frames_num = [i for i in range(len(df))]
-      for i, column in enumerate(columns):
+      for i, column in enumerate(col):
          if i % 3 == 0:
-            self.x[column] = [float(j) for j in df[column]]
+            col[i] = col[i].replace(column, f"{column}_1")
          elif i % 3 == 1:
-            self.y[column.replace(".1", "")] = [float(j) for j in df[column]]
+            col[i] = col[i].replace(column, f"{column}_2")
          else:
-            self.neighborhood[column.replace(".2", "")] = [float(j) for j in df[column]]
-            self.legends.append(column.replace(".2", ""))
+            col[i] = col[i].replace(column, f"{column}_3")
+
+      for i, column in enumerate(col):
+         if i % 3 == 0:
+            self.x[column.replace("_1", "")] = [float(j) for j in df[column]]
+         elif i % 3 == 1:
+            self.y[column.replace("_2", "")] = [float(j) for j in df[column]]
+         else:
+            self.neighborhood[column.replace("_3", "")] = [float(j) for j in df[column]]
+            self.legends.append(column.replace("_3", ""))
 
    def preprocessing_frame(self):
       for i in self.frames_num:
          self.frames[str(i)] = {}
          for label in self.legends:
             self.frames[str(i)][label] = {"x": self.x[label][i], "y": self.y[label][i], "neighborhood": self.neighborhood[label][i]}
+
+   def preprocessing(self, csv_path):
+      data: list = self.csv_reader(csv_path)
+      self.pd_preprocessing(data)
+      self.preprocessing_frame()
+
+
+if __name__ == "__main__":
+   analyze = Analyze()
+   analyze.preprocessing("../../../static/csv/test2.csv")

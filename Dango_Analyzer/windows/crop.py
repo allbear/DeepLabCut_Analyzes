@@ -13,7 +13,7 @@ class Crop:
                      [sg.Text('x座標'), sg.Input('0', size=(3, 1), enable_events=True, key='x'), sg.Text('y座標'), sg.Input('0', size=(3, 1), enable_events=True, key='y'), sg.Text('幅'), sg.Input('0', size=(3, 1), enable_events=True, key='w'), sg.Text('高さ'), sg.Input('0', size=(3, 1), enable_events=True, key='h')],
                      [sg.Text("出力する動画のファイル名を指定"), sg.Input("crop", key="file_name")],
                      [sg.Button('閉じる', key="Exit")]]
-      self.window = sg.Window("メイン画面", self.layout, size=(800, 800), keep_on_top=True)
+      self.window = sg.Window("メイン画面", self.layout, size=(800, 600), keep_on_top=True)
 
    def main(self):
       self.setup()

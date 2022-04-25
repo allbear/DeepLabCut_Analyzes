@@ -15,7 +15,7 @@ class Extract:
                      [sg.Text('', key="process")],
                      [sg.Button('メイン画面に戻る', key="back")],
                      [sg.Button('閉じる', key="Exit")]]
-      self.window = sg.Window("フレーム抽出", self.layout, size=(800, 800), keep_on_top=True)
+      self.window = sg.Window("フレーム抽出", self.layout, size=(800, 600), keep_on_top=True)
 
    def main(self):
       self.setup()
