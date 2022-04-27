@@ -2,7 +2,7 @@ import random
 
 import PySimpleGUI as sg
 
-from windows.utils import frame_process
+from Dango_Analyzer.utils import frame_process
 
 
 class Random:

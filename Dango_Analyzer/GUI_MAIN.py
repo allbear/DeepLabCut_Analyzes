@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 
-from windows import labeling, crop, extract, random_choice
+from Dango_Analyzer.windows import labeling, crop, extract, random_choice
 
 
 class GuiMain:
@@ -11,7 +11,7 @@ class GuiMain:
           'random': random_choice.Random().main,
           'crop': crop.Crop().main,
           'extract': extract.Extract().main,
-          "labeling": labeling.Labeling().main,
+          "labeling": labeling.Labeling().main
       }
 
    def setup(self):

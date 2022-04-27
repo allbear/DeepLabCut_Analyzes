@@ -6,7 +6,7 @@ import PySimpleGUI as sg
 import tqdm
 import matplotlib.pyplot as plt
 
-from windows.utils.csv_preprocessing import Analyze
+from Dango_Analyzer.utils.csv_preprocessing import Analyze
 
 
 class Labeling(Analyze):

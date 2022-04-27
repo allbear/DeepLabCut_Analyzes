@@ -1,4 +1,4 @@
-from GUI_MAIN import GuiMain
+from Dango_Analyzer.GUI_MAIN import GuiMain
 
 
 class Main:
