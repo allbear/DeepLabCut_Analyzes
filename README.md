@@ -7,6 +7,9 @@ DeepLabCutで出力したCSVを解析するだけのプログラム
 
 製作中の画像
 
+<img src="https://github.com/alrab223/DeepLabCut_Analyzes/blob/make_GUI/static/readme/angry.png">
+
+DLCでラベリングしたダンゴムシ
 ## Q,これは何ですか
 
 DEEPLABCUTのデータセットを作成する際、データセットの選択を手っ取り早く終わらせ、任意の部位のラベリングをもっと手軽に行えるようにしたかった
