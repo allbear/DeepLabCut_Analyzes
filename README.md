@@ -31,7 +31,7 @@ DEEPLABCUTのデータセットを作成する際、データセットの選択�
 
 他、機能追加予定
 
-## 1. 使用するには
+## 1. pipenvの準備
 pipenvが必要です。
 ```sh
 $ pip install pipenv
@@ -69,4 +69,10 @@ $ sudo apt install git-lfs
 インストール後は同様に、以下のコマンドを実行してください。
 ```sh
 $ git lfs install
+```
+
+## 3. 使用方法
+起動するにはmain.pyを実行してください
+```sh
+$ python main.py
 ```
