@@ -28,7 +28,7 @@ DEEPLABCUTのデータセットを作成する際、データセットの選択�
 
 他、機能追加予定
 
-## 使用するには
+## 1. 使用するには
 pipenvが必要です。
 ```sh
 $ pip install pipenv
@@ -39,8 +39,8 @@ $ pipenv install
 $ pipenv shell
 ```
 
-* このリポジトリはGit Large File Storageを使用しています。OS別で準備が必要です。
-
+## 2. Git Large File Storageのインストール
+このリポジトリはGit Large File Storageを使用しています。OS別で準備が必要です。
 ## MacOS
 Homebrewで下記のコマンドを実行
 
