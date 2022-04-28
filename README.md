@@ -7,7 +7,7 @@ DeepLabCutで出力したCSVを解析するだけのプログラム
 
 製作中の画像
 
-<img src="https://github.com/alrab223/DeepLabCut_Analyzes/blob/make_GUI/static/readme/angry.png">
+<img src="https://github.com/alrab223/DeepLabCut_Analyzes/blob/make_GUI/static/readme/roly.gif">
 
 DLCでラベリングしたダンゴムシ
 ## Q,これは何ですか
