@@ -2,11 +2,9 @@ import os
 import glob
 import shutil
 import random
-import copy
 
 import cv2
 import ffmpeg
-import matplotlib.pyplot as plt
 import tqdm
 
 
@@ -15,19 +13,13 @@ class FrameProcess:
    def __init__(self) -> None:
       self.times = 0
 
-   def frame_extract2(self, num, folder, ext="jpg"):
+   def frame_random(self, num, folder, ext="jpg"):
       files = glob.glob(f"{folder}/*.{ext}")
       files = random.sample(files, num)
       for f in files:
          if not os.path.exists(f"{folder}/random_images"):
-            os.mkdir()
+            os.mkdir(f"{folder}/random_images")
          shutil.copy2(f, f"{folder}/random_images")
-
-   def frame_extract(self, input):
-      cap = cv2.VideoCapture(input)
-      if not cap.isOpened():
-         return None
-      return cap
 
    def video_trimming(self, input, start_x, start_y, w, h):
       stream = ffmpeg.input(input)
@@ -36,6 +28,12 @@ class FrameProcess:
       output_file_name = output_file_str[0] + "_trimed." + output_file_str[1]
       stream = ffmpeg.output(stream, output_file_name)
       ffmpeg.run(stream, overwrite_output=True)
+
+   def frame_extract(self, input):
+      cap = cv2.VideoCapture(input)
+      if not cap.isOpened():
+         return None
+      return cap
 
    def flame_save(self, input, output, compression_check, compression_parameter):
       cap = self.frame_extract(input)

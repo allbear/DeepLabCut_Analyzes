@@ -55,8 +55,3 @@ class Analyze:
       data: list = self.csv_reader(csv_path)
       self.pd_preprocessing(data)
       self.preprocessing_frame()
-
-
-if __name__ == "__main__":
-   analyze = Analyze()
-   analyze.preprocessing("../../../static/csv/test2.csv")
