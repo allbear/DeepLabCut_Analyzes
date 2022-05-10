@@ -2,9 +2,9 @@ import csv
 import pandas as pd
 
 
-class Analyze:
+class CSVProcess:
 
-   def __init__(self) -> None:
+   def __empty__(self) -> None:
       self.frames_num = []
       self.x = {}
       self.y = {}
@@ -13,11 +13,14 @@ class Analyze:
       self.legends = []
 
    def csv_reader(self, csv_path) -> list:
-      with open(csv_path)as f:
-         stream = csv.reader(f)
-         data = []
-         for i in stream:
-            data.append(i)
+      data = []
+      try:
+         with open(csv_path)as f:
+            stream = csv.reader(f)
+            for i in stream:
+               data.append(i)
+      except FileNotFoundError:
+         pass
       return data
 
    def pd_preprocessing(self, data):
@@ -52,6 +55,12 @@ class Analyze:
             self.frames[str(i)][label] = {"x": self.x[label][i], "y": self.y[label][i], "neighborhood": self.neighborhood[label][i]}
 
    def preprocessing(self, csv_path):
+      self.__empty__()
       data: list = self.csv_reader(csv_path)
-      self.pd_preprocessing(data)
-      self.preprocessing_frame()
+      if not data:
+         return False
+      else:
+         self.pd_preprocessing(data)
+         self.preprocessing_frame()
+         print(self.x)
+         return True

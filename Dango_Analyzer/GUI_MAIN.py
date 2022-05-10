@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 
-from Dango_Analyzer.windows import labeling, crop, extract, random_choice
+from Dango_Analyzer.window import crop, extract, movie_play, random_choice, analyze
+from Dango_Analyzer.window.analyze_window import labeling
 
 
 class GuiMain:
@@ -11,16 +12,20 @@ class GuiMain:
           'random': random_choice.Random().main,
           'crop': crop.Crop().main,
           'extract': extract.Extract().main,
-          "labeling": labeling.Labeling().main
+          "analyze": analyze.Analyze().main,
+          "csv_edit": labeling.Labeling().main,
+          "movie_play": movie_play.Movie().main
       }
 
    def setup(self):
-      self.layout = [[sg.Text('メニューを選択してください', size=(15, 1), )],
-                     [sg.Button('ラベリング', key='labeling', size=(50, 2))],
+      self.layout = [[sg.Text('メニューを選択してください', size=(30, 1), )],
                      [sg.Button('動画のクロッピング', key='crop', size=(50, 2))],
                      [sg.Button('フレーム分割', key='extract', size=(50, 2))],
                      [sg.Button('画像ランダム抽出', key='random', size=(50, 2))],
-                     [sg.Button('Exit', key="Exit")]]
+                     [sg.Button('動画解析メニュー', key='analyze', size=(50, 2))],
+                     [sg.Button('CSV編集', key='csv_edit', size=(50, 2))],
+                     [sg.Button('動画再生', key='movie_play', size=(50, 2))],
+                     [sg.Button('閉じる', key='Exit')]]
 
       self.window = sg.Window('解析ツール', self.layout, size=(800, 600), keep_on_top=True)
 
@@ -31,5 +36,7 @@ class GuiMain:
          if event == "Exit":
             break
          function = self.handler[event]
+         self.window.close()
          function()
+         self.setup()
       self.window.close()

@@ -2,23 +2,11 @@ import json
 import os
 
 import matplotlib.pyplot as plt
+from Dango_Analyzer.utils.csv_preprocessing import CSVProcess
 from PIL import Image
 
 
-class Graph():
-   def __init__(self) -> None:
-      self.input_csv = None
-      self.legends = []  # 凡例
-      self.frames_num = []
-      self.x = {}
-      self.y = {}
-      self.neighborhood = {}
-      self.animation_x = {}
-      self.animation_y = {}
-      self.animation_frames = {}
-      self.plots_data = []
-      self.width = 2160
-      self.height = 3840
+class Graph(CSVProcess):
 
    def plot(self):
       fig = plt.figure()
@@ -66,24 +54,24 @@ class Graph():
          os.mkdir(f"images/{self.path}")
          plt.savefig(f"images/{self.path}/{self.path}.png", dpi=500, bbox_inches='tight')
 
-   def all_body_plot(self):  # すべてのパーツをプロット
+   def all_body_plot(self, csv_path, file_name, parts, width, height):  # すべてのパーツをプロット
+      self.preprocessing(csv_path)
       fig = plt.figure()
       ax = fig.add_subplot(1, 1, 1, aspect="equal")
-      for i, column in enumerate(self.legends):
-         ax.scatter(self.x[column], self.y[column], s=30, alpha=0.5, label=column)
-         ax.set_xlim(0, self.width)
-         ax.set_ylim(0, self.height)
+      cm = plt.cm.get_cmap("hsv")
+      for i, column in enumerate(parts):
+         rgb = cm(i / len(parts))
+         ax.scatter(self.x[column], self.y[column], s=30, alpha=0.5, label=column, color=rgb)
+         ax.set_xlim(0, width)
+         ax.set_ylim(0, height)
          ax.invert_yaxis()
          plt.xlabel("x[pixel]", size="large", color="green")
          plt.ylabel("y[pixel]", size="large", color="blue")
          plt.legend(loc='best',
                     bbox_to_anchor=(1, 1),
                     borderaxespad=0.,)
-      try:
-         plt.savefig(f"images/{self.path}/total.png", dpi=500, bbox_inches='tight')
-      except FileNotFoundError:
-         os.mkdir(f"images/{self.path}")
-         plt.savefig(f"images/{self.path}/total.png", dpi=500, bbox_inches='tight')
+      output_path = csv_path.split(os.path.basename(csv_path))[0]
+      plt.savefig(f"{output_path}/{file_name}", dpi=500, bbox_inches='tight')
 
    def frame_x_y(self, ax, colors, legs, part):
       if part == 1:
