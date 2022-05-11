@@ -1,7 +1,5 @@
-# DeepLabCutおたすけツール
-DeepLabCutで出力したCSVを解析するだけのプログラム
-
-のはずだっだもの
+# DeepLabCut支援ツール
+研究で行う前処理とか解析を行うツール
 
 <img src="https://github.com/alrab223/DeepLabCut_Analyzes/blob/make_GUI/static/readme/gui.png" width="500px">
 
