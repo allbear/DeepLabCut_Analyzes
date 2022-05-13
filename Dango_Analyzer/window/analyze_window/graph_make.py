@@ -22,6 +22,8 @@ class GraphMake(CSVProcess):
                      [sg.Button('グラフ作成', key='_glaph_')],
                      [sg.Input(), sg.FileBrowse('動画を選択', key='movie')],
                      [sg.Text("出力するグラフのファイル名を指定"), sg.Input("labeling", key="file_name")],
+                     [sg.Text("尤度を選択してください")],
+                     [sg.Input("0.4", key="likelihood", size=(3, 1))],
                      [sg.Button('CVS再選択', key="csv_select")],
                      [sg.Button('閉じる', key="Exit")],
                      [sg.Column(check_box, scrollable=True)]]
@@ -52,7 +54,7 @@ class GraphMake(CSVProcess):
                if values[select_legend] is True:
                   parts.append(select_legend)
             width, height = self.get_movie_property(values["movie"])
-            graph.Graph().all_body_plot(csv_path, values["file_name"], parts, width, height)
+            graph.Graph().all_body_plot(csv_path, values["file_name"], parts, width, height, float(values["likelihood"]))
          if event == "csv_select":
             self.window.Close()
             self.select_csv()

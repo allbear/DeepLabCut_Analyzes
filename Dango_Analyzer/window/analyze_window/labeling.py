@@ -43,7 +43,7 @@ class Labeling(CSVProcess):
             for select_legend in self.legends:
                if values[select_legend] is True:
                   parts.append(select_legend)
-            labeling_process.LabelingProcess().labeling(self.legends, self.frames, parts, values["movie"], values["file_name"])
+            labeling_process.LabelingProcess().labeling2(self.legends, self.frames, parts, values["movie"], values["file_name"])
          if event == "csv_select":
             self.window.Close()
             self.select_csv()

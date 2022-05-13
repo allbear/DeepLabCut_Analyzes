@@ -1,3 +1,5 @@
+# グラフ作成に関するプログラム
+
 import json
 import os
 
@@ -8,60 +10,23 @@ from PIL import Image
 
 class Graph(CSVProcess):
 
-   def plot(self):
-      fig = plt.figure()
-      with open("util.json", "r")as f:
-         util = json.load(f)
-      colors = util["rolylegs_colors"]
-      legs = util["14legs_dactylus"]
-      for i, column in enumerate(legs):
-         fig = plt.figure()
-         ax = fig.add_subplot(1, 1, 1)
-         ax.scatter(self.x[column], self.y[column], s=30, alpha=0.5, c=colors[i], label=legs[i])
-         ax.set_xlim(0, self.width)
-         ax.set_ylim(0, self.height)
-         ax.invert_yaxis()
-         plt.xlabel("x[pixel]", size="large", color="green")
-         plt.ylabel("y[pixel]", size="large", color="blue")
-         plt.legend(loc='best',
-                    bbox_to_anchor=(1, 1),
-                    borderaxespad=0.,)
-         try:
-            plt.savefig(f"images/{self.path}/{column}.png", dpi=500, bbox_inches='tight')
-         except FileNotFoundError:
-            os.mkdir(f"images/{self.path}")
-            plt.savefig(f"images/{self.path}/{column}.png", dpi=500, bbox_inches='tight')
-
-   def all_plot(self):  # すべての指定のパーツをプロット
-      fig = plt.figure()
-      with open("util.json", "r")as f:
-         util = json.load(f)
-      colors = util["rolylegs_colors"]
-      parts = util["14legs_dactylus"]
-      fig = plt.figure()
-      ax = fig.add_subplot(1, 1, 1, aspect="equal")
-      for i, column in enumerate(parts):
-         ax.scatter(self.x[column], self.y[column], s=30, alpha=0.5, c=colors[i], label=column)
-         ax.set_xlim(0, self.width)
-         ax.set_ylim(0, self.height)
-         ax.invert_yaxis()
-      plt.xlabel("x[pixel]", size="large", color="green")
-      plt.ylabel("y[pixel]", size="large", color="blue")
-      plt.legend(loc='best', bbox_to_anchor=(1, 1), handletextpad=0.3, borderaxespad=0, borderpad=0)
-      try:
-         plt.savefig(f"images/{self.path}/{self.path}.png", dpi=500, bbox_inches='tight')
-      except FileNotFoundError:
-         os.mkdir(f"images/{self.path}")
-         plt.savefig(f"images/{self.path}/{self.path}.png", dpi=500, bbox_inches='tight')
-
-   def all_body_plot(self, csv_path, file_name, parts, width, height):  # すべてのパーツをプロット
+   def all_body_plot(self, csv_path, file_name, parts, width, height, likelihood):  # すべてのパーツをプロット
       self.preprocessing(csv_path)
       fig = plt.figure()
       ax = fig.add_subplot(1, 1, 1, aspect="equal")
       cm = plt.cm.get_cmap("hsv")
       for i, column in enumerate(parts):
-         rgb = cm(i / len(parts))
-         ax.scatter(self.x[column], self.y[column], s=30, alpha=0.5, label=column, color=rgb)
+         number = self.legends.index(column)
+         rgb = cm(number / len(self.legends))
+         print(rgb)
+         x_tmp = []
+         y_tmp = []
+         for i, j in enumerate(self.neighborhood[column]):
+            if j >= likelihood:
+               x_tmp.append(self.x[column][i])
+               y_tmp.append(self.y[column][i])
+
+         ax.scatter(x_tmp, y_tmp, s=30, alpha=0.5, label=column, color=rgb)
          ax.set_xlim(0, width)
          ax.set_ylim(0, height)
          ax.invert_yaxis()

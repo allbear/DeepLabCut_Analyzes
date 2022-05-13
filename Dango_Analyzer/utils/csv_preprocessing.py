@@ -62,5 +62,4 @@ class CSVProcess:
       else:
          self.pd_preprocessing(data)
          self.preprocessing_frame()
-         print(self.x)
          return True

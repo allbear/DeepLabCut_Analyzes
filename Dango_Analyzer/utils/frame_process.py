@@ -51,3 +51,21 @@ class FrameProcess:
             else:
                cv2.imwrite(f'{output}/{str(n).zfill(digit)}.png', frame)
                n += 1
+
+   def resize(self, input, size, file_name, window):
+      cap = cv2.VideoCapture(input)
+      fps = cap.get(cv2.CAP_PROP_FPS)
+      weight = 100 / int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+      fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+      output_path = input.split(os.path.basename(input))[0]
+      writer = cv2.VideoWriter(f"{output_path}/{file_name}.mp4", fourcc, fps, (int(size), int(size * 9 / 16)))
+      process: int = 0
+      while True:
+         ret, frame = cap.read()
+         if not ret:
+            break
+         frame = cv2.resize(frame, (int(size), int(size * 9 / 16)))
+         writer.write(frame)
+         process += weight
+         window.update_bar(int(process))
+      window.update_bar(100)
