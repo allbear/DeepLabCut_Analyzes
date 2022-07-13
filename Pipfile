@@ -16,6 +16,8 @@ notebook = "*"
 ffmpeg = "*"
 tqdm = "*"
 ffmpeg-python = "*"
+requests = "*"
+deeplabcut = "*"
 
 [dev-packages]
 flake8 = "*"
