@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 
-from Dango_Analyzer.window import crop, extract, movie_play, random_choice, analyze, resize
+from Dango_Analyzer.window import crop, extract, image_conversion, random_choice, analyze, resize
 from Dango_Analyzer.window.analyze_window import labeling
 
 
@@ -14,7 +14,7 @@ class GuiMain:
           'extract': extract.Extract().main,
           "analyze": analyze.Analyze().main,
           "csv_edit": labeling.Labeling().main,
-          "movie_play": movie_play.Movie().main,
+          "image_conversion": image_conversion.ImageConversion().main,
           "movie_resize": resize.Resize().main,
       }
 
@@ -26,8 +26,7 @@ class GuiMain:
                      [sg.Button('画像ランダム抽出', key='random', size=(50, 2))],
                      [sg.Button('動画リサイズ', key='movie_resize', size=(50, 2))],
                      [sg.Button('動画解析メニュー', key='analyze', size=(50, 2))],
-                     [sg.Button('CSV編集', key='csv_edit', size=(50, 2))],
-                     [sg.Button('動画再生', key='movie_play', size=(50, 2))],
+                     [sg.Button('画像変換', key='image_conversion', size=(50, 2))],
                      [sg.Button('閉じる', key='Exit')]]
       # self.layout.append(sg.MenuBar(self.menu_bar))
 
