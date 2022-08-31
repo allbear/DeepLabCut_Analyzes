@@ -1,11 +1,11 @@
-import os
 import glob
-import shutil
+import os
 import random
 
 import cv2
 import ffmpeg
 import tqdm
+from PIL import Image
 
 
 class FrameProcess:
@@ -13,13 +13,16 @@ class FrameProcess:
    def __init__(self) -> None:
       self.times = 0
 
-   def frame_random(self, num, folder, ext="jpg"):
-      files = glob.glob(f"{folder}/*.{ext}")
+   def frame_random(self, num, folder, ext):
+      files = glob.glob(f"{folder}/*.png")
+      files.extend(glob.glob(f"{folder}/*.jpg"))
       files = random.sample(files, num)
+      if not os.path.exists(f"{folder}/random_images"):
+         os.mkdir(f"{folder}/random_images")
       for f in files:
-         if not os.path.exists(f"{folder}/random_images"):
-            os.mkdir(f"{folder}/random_images")
-         shutil.copy2(f, f"{folder}/random_images")
+         f_name = os.path.splitext(os.path.basename(f))[0]
+         im = Image.open(f)
+         im.save(f"{folder}/random_images/{f_name}.{ext}")
 
    def video_trimming(self, input, start_x, start_y, w, h):
       stream = ffmpeg.input(input)
