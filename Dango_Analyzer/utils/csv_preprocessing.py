@@ -15,7 +15,7 @@ class CSVProcess:
    def csv_reader(self, csv_path) -> list:
       data = []
       try:
-         with open(csv_path)as f:
+         with open(csv_path, encoding='shift_jis')as f:
             stream = csv.reader(f)
             for i in stream:
                data.append(i)
