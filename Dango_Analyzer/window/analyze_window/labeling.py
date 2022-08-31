@@ -3,6 +3,13 @@ from Dango_Analyzer.utils import labeling_process
 from Dango_Analyzer.utils.csv_preprocessing import CSVProcess
 
 
+class LabelCheck:
+   def __init__(self) -> None:
+      self.parts = []
+      self.line_start = []
+      self.line_end = []
+
+
 class Labeling(CSVProcess):
    sg.theme('BlueMono')
 
@@ -14,17 +21,46 @@ class Labeling(CSVProcess):
       self.window = sg.Window("メイン画面", self.layout, size=(800, 600), keep_on_top=True)
 
    def setup(self):
-      check_box = []
+      check_box = [[], [], []]
       for i in self.legends:
-         check_box.append([sg.Checkbox(i, default=True, key=i)])
+         check_box[0].append([sg.Checkbox(i, default=True, key=i)])
+         check_box[1].append([sg.Checkbox(i, default=False, key=f"{i}.1")])
+         check_box[2].append([sg.Checkbox(i, default=False, key=f"{i}.2")])
+
+      frame_1 = sg.Frame('ラベリングするラベルを選択', [
+          [sg.Column(check_box[0], scrollable=True)]
+      ])
+      frame_2 = sg.Frame('ラインの起点を選択', [
+          [sg.Column(check_box[1], scrollable=True)]
+      ])
+      frame_3 = sg.Frame('ラインの終点を選択', [
+          [sg.Column(check_box[2], scrollable=True)]
+      ])
+
       self.layout = [[sg.Text("任意の部位とラベリングを行う動画を選択してください")],
                      [sg.Button('解析', key='analyzes')],
                      [sg.Input(), sg.FileBrowse('動画を選択', key='movie')],
                      [sg.Text("出力する動画のファイル名を指定"), sg.Input("labeling", key="file_name")],
                      [sg.Button('CVS再選択', key="csv_select")],
-                     [sg.Button('閉じる', key="Exit")],
-                     [sg.Column(check_box, scrollable=True)]]
+                     [frame_1, frame_2, frame_3],
+                     [sg.Button('閉じる', key="Exit")]]
       self.window = sg.Window("メイン画面", self.layout, size=(800, 600), keep_on_top=True)
+
+   def label_checking(self, values):
+      label = LabelCheck()
+      select = []
+      select = [x for x in self.legends]
+      select += [x + ".1" for x in self.legends]
+      select += [x + ".2" for x in self.legends]
+
+      for select_legend in select:
+         if values[select_legend] is True and ".1" in select_legend:
+            label.line_start.append(select_legend.replace(".1", ""))
+         elif values[select_legend] is True and ".2" in select_legend:
+            label.line_end.append(select_legend.replace(".2", ""))
+         elif values[select_legend] is True:
+            label.parts.append(select_legend)
+      return label
 
    def main(self):
       self.select_csv()
@@ -39,11 +75,8 @@ class Labeling(CSVProcess):
             else:
                sg.popup('CSVファイルを選択してください', keep_on_top=True)
          if event == "analyzes":
-            parts = []
-            for select_legend in self.legends:
-               if values[select_legend] is True:
-                  parts.append(select_legend)
-            labeling_process.LabelingProcess().labeling2(self.legends, self.frames, parts, values["movie"], values["file_name"])
+            label = self.label_checking(values)
+            labeling_process.LabelingProcess().labeling(self.legends, self.frames, label, values["movie"], values["file_name"])
          if event == "csv_select":
             self.window.Close()
             self.select_csv()
