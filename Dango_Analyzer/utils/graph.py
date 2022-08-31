@@ -3,6 +3,7 @@
 import json
 import os
 
+import japanize_matplotlib
 import matplotlib.pyplot as plt
 from Dango_Analyzer.utils.csv_preprocessing import CSVProcess
 from PIL import Image
@@ -14,7 +15,7 @@ class Graph(CSVProcess):
       self.preprocessing(csv_path)
       fig = plt.figure()
       ax = fig.add_subplot(1, 1, 1, aspect="equal")
-      cm = plt.cm.get_cmap("hsv")
+      cm = plt.cm.get_cmap("rainbow")
       for i, column in enumerate(parts):
          number = self.legends.index(column)
          rgb = cm(number / len(self.legends))
