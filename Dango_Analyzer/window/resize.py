@@ -15,6 +15,8 @@ class Resize:
                      [sg.Text("", key="resize_lavel")],
                      [sg.Input(), sg.FileBrowse('動画を選択', key='movie')],
                      [sg.Listbox(preview_size, size=(15, len(size_list)), key='_resize_')],
+                     [sg.Text("動画をトリミングしている場合は元の解像度を指定してください。空間解像度を合わせます。")],
+                     [sg.Text('幅'), sg.Input(size=(7, 1), enable_events=True, key='b_trimming_width'), sg.Text('高さ'), sg.Input(size=(7, 1), enable_events=True, key='b_trimming_heigth')],
                      [sg.Text("出力する動画のファイル名を指定"), sg.Input("resize", key="file_name")],
                      [sg.Button('閉じる', key="Exit")]]
       self.window = sg.Window("メイン画面", self.layout, size=(800, 600), keep_on_top=True)
@@ -27,6 +29,13 @@ class Resize:
             break
          if event == "resize":
             self.window["resize_lavel"].update("処理中です")
-            frame_process.FrameProcess().resize(values["movie"], self.resolutions[values["_resize_"][0]], values["file_name"], self.window["bar"])
+            target_w = int(self.resolutions[values["_resize_"][0]])
+            target_h = int(self.resolutions[values["_resize_"][0]] * 9 / 16)
+            target_resolution = [target_w, target_h]
+            if values["b_trimming_width"] == "":
+               original_resolution = [0, 0]
+            else:
+               original_resolution = [int(values["b_trimming_width"]), int(values["b_trimming_heigth"])]
+            frame_process.FrameProcess().resize(values["movie"], target_resolution, original_resolution, values["file_name"], self.window["bar"])
             self.window["resize_lavel"].update("完了しました")
       self.window.Close()

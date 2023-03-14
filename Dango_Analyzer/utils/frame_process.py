@@ -55,19 +55,29 @@ class FrameProcess:
                cv2.imwrite(f'{output}/{str(n).zfill(digit)}.png', frame)
                n += 1
 
-   def resize(self, input, size, file_name, window):
+   def resize(self, input, target_resolution, original_resolution, file_name, window):
       cap = cv2.VideoCapture(input)
+      width, height = cap.get(cv2.CAP_PROP_FRAME_WIDTH), cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # 動画のサイズを取得
+      # 指定が無ければ取得したサイズを使用
+      if original_resolution[0] == 0:
+         original_resolution[0] = width
+         original_resolution[1] = height
+      # リサイズを動画のサイズに合わせる
+      target_w = round(width / (original_resolution[0] / target_resolution[0]))
+      target_h = round(height / (original_resolution[1] / target_resolution[1]))
+
       fps = cap.get(cv2.CAP_PROP_FPS)
-      weight = 100 / int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+      weight = 100 / int(cap.get(cv2.CAP_PROP_FRAME_COUNT))  # 進行度を取得するための変数
       fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
       output_path = input.split(os.path.basename(input))[0]
-      writer = cv2.VideoWriter(f"{output_path}/{file_name}.mp4", fourcc, fps, (int(size), int(size * 9 / 16)))
+      writer = cv2.VideoWriter(f"{output_path}/{file_name}.mp4", fourcc, fps, (target_w, target_h))
       process: int = 0
+      print(target_w, target_h)
       while True:
          ret, frame = cap.read()
          if not ret:
             break
-         frame = cv2.resize(frame, (int(size), int(size * 9 / 16)))
+         frame = cv2.resize(frame, (target_w, target_h))
          writer.write(frame)
          process += weight
          window.update_bar(int(process))
